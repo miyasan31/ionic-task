@@ -7,20 +7,24 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding-horizontal">
-  <ion-item lines="full" class="ion-padding-bottom">
-    <ion-label position="floating">タスク</ion-label>
-    <ion-input
-      type="text"
-      placeholder="タスクを入力する"
-      [(ngModel)]="task.inputTask"
-      class="ion-padding-bottom ion-text-primary"
-    ></ion-input>
-  </ion-item>
+<ion-content>
+  <form class="ion-padding-horizontal">
+    <ion-item lines="full" class="ion-padding-bottom">
+      <ion-label position="floating">タスク</ion-label>
+      <ion-input
+        type="text"
+        name="task"
+        placeholder="タスクを入力する"
+        [(ngModel)]="task.inputTask"
+        class="ion-padding-bottom ion-text-primary"
+      ></ion-input>
+    </ion-item>
 
-  <ion-button (click)="onTaskUpsert()" expand="block" fill="clear" shape="round"
-    >保存する</ion-button
-  >
+    <ion-button (click)="onTaskUpsert()" expand="block" fill="clear" shape="round"
+      >保存する</ion-button
+    >
+  </form>
+
   <ion-item *ngFor="let task of taskList; let i = index" class="border">
     <ion-label>{{task.name}}</ion-label>
     <ion-button (click)="onTaskEdit(i)" expand="block" fill="clear" shape="round">
