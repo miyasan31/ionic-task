@@ -1,0 +1,25 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-horizontal">
+  <ion-item lines="full" class="ion-padding-bottom">
+    <ion-label position="floating">タスク</ion-label>
+    <ion-input
+      type="text"
+      placeholder="タスクを入力する"
+      [(ngModel)]="inputTask"
+      class="ion-padding-bottom ion-text-primary"
+    ></ion-input>
+  </ion-item>
+
+  <ion-button (click)="onClick()" expand="block" fill="clear" shape="round"> Click me </ion-button>
+  <ion-item *ngFor="let task of taskList" class="border">
+    <ion-label>{{task.name}}</ion-label>
+  </ion-item>
+</ion-content>
