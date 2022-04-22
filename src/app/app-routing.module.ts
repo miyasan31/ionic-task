@@ -4,7 +4,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'folder/Inbox',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
@@ -14,10 +14,6 @@ const routes: Routes = [
   {
     path: 'task',
     loadChildren: () => import('./task/task.module').then((m) => m.TaskPageModule),
-  },
-  {
-    path: 'folder/:id',
-    loadChildren: () => import('./folder/folder.module').then((m) => m.FolderPageModule),
   },
 ];
 
