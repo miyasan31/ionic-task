@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { initialize } from '@ionic/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-task',
   templateUrl: './task.page.html',
   styleUrls: ['./task.page.scss'],
 })
-export class TaskPage implements OnInit {
+export class TaskPage {
   title = 'タスク登録';
   taskList = [];
   task = {
@@ -16,7 +15,7 @@ export class TaskPage implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
+  ionViewWillEnter() {
     if ('taskList' in localStorage) {
       this.taskList = JSON.parse(localStorage.taskList);
     }
@@ -27,7 +26,8 @@ export class TaskPage implements OnInit {
       return;
     }
 
-    if (!this.task.editIndex) {
+    // CMT:indexが0の場合があるためnullで判断
+    if (this.task.editIndex !== null) {
       // 編集
       this.taskList[this.task.editIndex] = { name: this.task.inputTask };
     } else {
