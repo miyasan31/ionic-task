@@ -13,13 +13,21 @@
     <ion-input
       type="text"
       placeholder="タスクを入力する"
-      [(ngModel)]="inputTask"
+      [(ngModel)]="task.inputTask"
       class="ion-padding-bottom ion-text-primary"
     ></ion-input>
   </ion-item>
 
-  <ion-button (click)="onClick()" expand="block" fill="clear" shape="round"> Click me </ion-button>
-  <ion-item *ngFor="let task of taskList" class="border">
+  <ion-button (click)="onTaskUpsert()" expand="block" fill="clear" shape="round"
+    >保存する</ion-button
+  >
+  <ion-item *ngFor="let task of taskList; let i = index" class="border">
     <ion-label>{{task.name}}</ion-label>
+    <ion-button (click)="onTaskEdit(i)" expand="block" fill="clear" shape="round">
+      編集
+    </ion-button>
+    <ion-button (click)="onTaskDelete(i)" expand="block" fill="clear" shape="round">
+      削除
+    </ion-button>
   </ion-item>
 </ion-content>

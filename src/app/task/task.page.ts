@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { initialize } from '@ionic/core';
 
 @Component({
   selector: 'app-task',
@@ -8,20 +9,48 @@ import { Component, OnInit } from '@angular/core';
 export class TaskPage implements OnInit {
   title = 'タスク登録';
   taskList = [];
-  inputTask = '';
+  task = {
+    editIndex: null,
+    inputTask: '',
+  };
 
   constructor() {}
 
   ngOnInit() {
-    this.taskList = JSON.parse(localStorage.taskList);
+    if ('taskList' in localStorage) {
+      this.taskList = JSON.parse(localStorage.taskList);
+    }
   }
 
-  onClick() {
-    if (!this.inputTask) {
+  onTaskUpsert() {
+    if (!this.task) {
       return;
     }
-    this.taskList = [...this.taskList, { name: this.inputTask }];
+
+    if (!this.task.editIndex) {
+      // 編集
+      this.taskList[this.task.editIndex] = { name: this.task.inputTask };
+    } else {
+      // 追加
+      this.taskList = [...this.taskList, { name: this.task.inputTask }];
+    }
+
     localStorage.taskList = JSON.stringify(this.taskList);
-    this.inputTask = '';
+    this.task = {
+      editIndex: null,
+      inputTask: '',
+    };
+  }
+
+  onTaskEdit(index: number) {
+    this.task = {
+      editIndex: index,
+      inputTask: this.taskList.filter((_, i) => i === index)[0].name,
+    };
+  }
+
+  onTaskDelete(index: number) {
+    this.taskList = this.taskList.filter((_, i) => i !== index);
+    localStorage.taskList = JSON.stringify(this.taskList);
   }
 }
