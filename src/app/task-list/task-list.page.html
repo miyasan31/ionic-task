@@ -9,7 +9,11 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let task of taskList; let i = index" button="true" (click)="changeTask(i)">
+    <ion-item
+      *ngFor="let task of (taskList$ | async); let i = index"
+      button="true"
+      (click)="changeTask(i)"
+    >
       <ion-label>{{task.name}}</ion-label>
     </ion-item>
   </ion-list>
