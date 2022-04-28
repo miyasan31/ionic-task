@@ -7,7 +7,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { localStorageSync } from 'ngrx-store-localstorage';
-import { reducers, Reducers } from './reducks/reducers';
+import { reducers, Reducers } from './store/reducers';
 
 const localStorageSyncReducer = (reducer: ActionReducer<Reducers>): ActionReducer<Reducers> =>
   localStorageSync({ keys: ['taskList'], rehydrate: true })(reducer);

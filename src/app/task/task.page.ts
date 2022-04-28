@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Task } from '../reducks/task/type';
-import { createTaskAction, deleteTaskAction, updateTaskAction } from '../reducks/task/action';
-import { Reducers } from '../reducks/reducers';
+import { Task } from '../store/task/type';
+import { createTaskAction, deleteTaskAction, updateTaskAction } from '../store/task/action';
+import { Reducers } from '../store/reducers';
 
 @Component({
   selector: 'app-task',

@@ -3,9 +3,9 @@ import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { take, filter } from 'rxjs/operators';
-import { Reducers } from '../reducks/reducers';
-import { deleteTaskAction, updateTaskAction } from '../reducks/task/action';
-import { Task } from '../reducks/task/type';
+import { Reducers } from '../store/reducers';
+import { deleteTaskAction, updateTaskAction } from '../store/task/action';
+import { Task } from '../store/task/type';
 
 @Component({
   selector: 'app-task-list',
