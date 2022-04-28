@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { Task } from '../reducks/task/type';
+import { createTaskAction, deleteTaskAction, updateTaskAction } from '../reducks/task/action';
+import { Reducers } from '../reducks/reducers';
 
 @Component({
   selector: 'app-task',
@@ -7,50 +12,42 @@ import { Component } from '@angular/core';
 })
 export class TaskPage {
   title = 'タスク登録';
-  taskList = [];
+  taskList$: Observable<Task[]>;
   task = {
     editIndex: null,
-    inputTask: '',
+    inputText: '',
   };
 
-  constructor() {}
-
-  ionViewWillEnter() {
-    if ('taskList' in localStorage) {
-      this.taskList = JSON.parse(localStorage.taskList);
-    }
+  constructor(private store: Store<Reducers>) {
+    this.taskList$ = store.select('taskList');
   }
 
   onTaskUpsert() {
-    if (!this.task) {
-      return;
-    }
-
     // CMT:indexが0の場合があるためnullで判断
     if (this.task.editIndex !== null) {
       // 編集
-      this.taskList[this.task.editIndex] = { name: this.task.inputTask };
+      this.store.dispatch(
+        updateTaskAction({ index: this.task.editIndex, task: { name: this.task.inputText } }),
+      );
     } else {
       // 追加
-      this.taskList = [...this.taskList, { name: this.task.inputTask }];
+      this.store.dispatch(createTaskAction({ task: { name: this.task.inputText } }));
     }
 
-    localStorage.taskList = JSON.stringify(this.taskList);
     this.task = {
       editIndex: null,
-      inputTask: '',
+      inputText: '',
     };
   }
 
-  onTaskEdit(index: number) {
+  onTaskEdit(index: number, taskName: Task['name']) {
     this.task = {
       editIndex: index,
-      inputTask: this.taskList.filter((_, i) => i === index)[0].name,
+      inputText: taskName,
     };
   }
 
   onTaskDelete(index: number) {
-    this.taskList = this.taskList.filter((_, i) => i !== index);
-    localStorage.taskList = JSON.stringify(this.taskList);
+    this.store.dispatch(deleteTaskAction({ index }));
   }
 }

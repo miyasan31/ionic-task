@@ -15,7 +15,7 @@
         type="text"
         name="task"
         placeholder="タスクを入力する"
-        [(ngModel)]="task.inputTask"
+        [(ngModel)]="task.inputText"
         class="ion-text-primary"
         required
         minlength="3"
@@ -29,9 +29,9 @@
   </form>
 
   <ion-list>
-    <ion-item *ngFor="let task of taskList; let i = index">
+    <ion-item *ngFor="let task of (taskList$ | async); let i = index">
       <ion-label>{{task.name}}</ion-label>
-      <ion-button (click)="onTaskEdit(i)" expand="block" fill="clear" shape="round">
+      <ion-button (click)="onTaskEdit(i, task.name)" expand="block" fill="clear" shape="round">
         編集
       </ion-button>
       <ion-button (click)="onTaskDelete(i)" expand="block" fill="clear" shape="round">

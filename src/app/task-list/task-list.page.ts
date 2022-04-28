@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { take, filter } from 'rxjs/operators';
+import { Reducers } from '../reducks/reducers';
+import { deleteTaskAction, updateTaskAction } from '../reducks/task/action';
+import { Task } from '../reducks/task/type';
 
 @Component({
   selector: 'app-task-list',
@@ -8,43 +14,49 @@ import { ActionSheetController, AlertController } from '@ionic/angular';
 })
 export class TaskListPage implements OnInit {
   title = 'タスク一覧';
-  taskList = [];
+  taskList$: Observable<Task[]>;
 
   constructor(
     public actionSheetController: ActionSheetController,
     public alertController: AlertController,
-  ) {}
-
-  ngOnInit() {
-    if ('taskList' in localStorage) {
-      this.taskList = JSON.parse(localStorage.taskList);
-    }
+    private store: Store<Reducers>,
+  ) {
+    this.taskList$ = store.select('taskList');
   }
 
+  ngOnInit() {}
+
   async updateTask(index: number) {
-    const prompt = await this.alertController.create({
-      header: '変更後のタスク',
-      inputs: [
-        {
-          name: 'task',
-          placeholder: 'タスク',
-          value: this.taskList[index].name,
-        },
-      ],
-      buttons: [
-        {
-          text: '閉じる',
-        },
-        {
-          text: '保存',
-          handler: (data) => {
-            this.taskList[index] = { name: data.task };
-            localStorage.taskList = JSON.stringify(this.taskList);
-          },
-        },
-      ],
-    });
-    prompt.present();
+    this.taskList$
+      .pipe(
+        filter((_, i) => i === 0),
+        take(1),
+      )
+      .subscribe(async (taskList) => {
+        const prompt = await this.alertController.create({
+          header: '変更後のタスク',
+          inputs: [
+            {
+              name: 'task',
+              placeholder: 'タスク',
+              value: taskList[index].name,
+            },
+          ],
+          buttons: [
+            {
+              text: '閉じる',
+            },
+            {
+              text: '保存',
+              handler: (data) => {
+                this.store.dispatch(updateTaskAction({ index, task: { name: data.task } }));
+              },
+            },
+          ],
+        });
+
+        prompt.present();
+      });
   }
 
   async changeTask(index: number) {
@@ -56,8 +68,7 @@ export class TaskListPage implements OnInit {
           role: 'destructive',
           icon: 'trash',
           handler: () => {
-            this.taskList = this.taskList.filter((_, i) => i !== index);
-            localStorage.taskList = JSON.stringify(this.taskList);
+            this.store.dispatch(deleteTaskAction({ index }));
           },
         },
         {
@@ -71,9 +82,7 @@ export class TaskListPage implements OnInit {
           text: '閉じる',
           icon: 'close',
           role: 'cancel',
-          handler: () => {
-            console.log('キャンセル');
-          },
+          handler: () => null,
         },
       ],
     });
